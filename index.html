@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ebek Official — Social Media</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -12,39 +12,34 @@
     :root{--neon:#00ffff;--bg1:#060b16;--bg2:#0b1224;--text:#e6f1ff}
 
     *{margin:0;padding:0;box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--text);
-      background:linear-gradient(180deg,var(--bg1),var(--bg2));
-      overflow:hidden
-    }
+    html,body{height:100%;overflow:hidden;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--text);font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
 
+    /* przewijamy tylko #page (bezpieczne na telefonach) */
     #page{
+      height:100svh;                 /* nowe, mobilne viewporty */
       height:100dvh;
+      min-height:100svh;
       overflow:auto;
-      overscroll-behavior:contain;
+      overscroll-behavior-y:contain;
       -webkit-overflow-scrolling:touch;
-      display:flex;
-      flex-direction:column;
-      align-items:stretch
+      scrollbar-gutter:stable;
+      display:flex;flex-direction:column;align-items:stretch;
+      padding-bottom:max(24px, env(safe-area-inset-bottom));
     }
 
+    /* HERO / powitania */
     header{
       position:relative;
-      height:180px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      z-index:10
+      height:190px;
+      padding-top:calc(22px + env(safe-area-inset-top));
+      display:flex;align-items:center;justify-content:center;
+      text-align:center;z-index:10;overflow:hidden
     }
     header h1{
       position:absolute;left:0;right:0;
-      font-family:'Orbitron',sans-serif;
-      font-size:clamp(26px,6vw,48px);
-      color:var(--neon);
-      text-shadow:0 0 12px var(--neon),0 0 30px var(--neon);
+      font-family:'Orbitron',sans-serif;font-weight:600;
+      font-size:clamp(28px,6.2vw,52px);
+      color:var(--neon);text-shadow:0 0 12px var(--neon),0 0 30px var(--neon);
       opacity:0;transform:translateY(10px);
       animation:fade 8s infinite
     }
@@ -56,12 +51,13 @@
     }
     .divider{
       position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
-      width:min(70%,420px);height:3px;border-radius:3px;
+      width:min(72%,440px);height:3px;border-radius:3px;
       background:var(--neon);box-shadow:0 0 15px var(--neon)
     }
 
+    /* PANEL */
     main{
-      width:min(92%,720px);
+      width:min(92%, 760px);
       margin:22px auto;
       padding:32px 18px;
       text-align:center;
@@ -69,9 +65,9 @@
       border:1px solid rgba(0,255,255,.35);
       border-radius:26px;
       box-shadow:0 0 28px rgba(0,255,255,.3);
-      z-index:5
     }
 
+    /* PRZYCISKI */
     .socials{display:flex;flex-direction:column;gap:18px}
     .btn{
       display:flex;align-items:center;justify-content:center;gap:12px;
@@ -85,6 +81,7 @@
     .btn:hover{transform:translateY(-2px);box-shadow:0 0 26px rgba(0,255,255,.6);border-color:#00ffff}
     .btn i{font-size:22px}
 
+    /* CTA */
     .cta{
       margin-top:22px;
       font-family:'Orbitron',sans-serif;
@@ -94,28 +91,25 @@
     }
     .cta a{color:var(--neon);text-decoration:none;font-weight:800}
 
-    .counter{
-      margin-top:26px;
-      font-family:'Orbitron',sans-serif;
-      color:var(--neon);
-      text-shadow:0 0 10px var(--neon)
-    }
-    .widget{
-      margin:12px auto 0;
-      width:100%;
-      min-height:150px;
-      border-radius:12px;
-      background:transparent;
-      overflow:hidden
-    }
+    /* LICZNIK */
+    .counter{margin-top:26px;font-family:'Orbitron',sans-serif;color:var(--neon);text-shadow:0 0 10px var(--neon)}
+    .widget{margin:12px auto 0;width:100%;min-height:180px;border-radius:12px;background:transparent;overflow:hidden}
 
-    footer{
-      margin-top:auto;
-      text-align:center;
-      color:#a7b5d9;
-      font-size:14px;
-      padding:24px 0 18px
+    /* STOPKA */
+    footer{margin-top:auto;text-align:center;color:#a7b5d9;font-size:14px;padding:24px 0 max(18px, env(safe-area-inset-bottom))}
+
+    /* desktopowe dopieszczenie */
+    @media (min-width:1024px){
+      header{height:220px;padding-top:40px}
+      header h1{font-size:clamp(42px,3.2vw,64px)}
+      .divider{width:620px;bottom:22px}
+      main{width:min(92%,1100px);padding:48px 36px}
+      .socials{display:grid;grid-template-columns:1fr 1fr;gap:22px 24px}
+      .btn{font-size:24px;padding:18px 22px}
+      .socials .btn:last-child{grid-column:span 2;max-width:520px;justify-self:center}
+      .widget{min-height:200px;transform:scale(1.12);transform-origin:top center}
     }
+    @media (min-width:1440px){ main{width:min(86%,1200px)} }
   </style>
 </head>
 <body>
@@ -128,11 +122,21 @@
 
     <main role="main">
       <div class="socials">
-        <a class="btn" href="https://www.instagram.com/ebek_18?igsh=MTN5eHhqYWl0dmJrOA==" target="_blank" rel="noopener"><i class="fab fa-instagram" style="color:#E1306C"></i>Instagram</a>
-        <a class="btn" href="https://www.snapchat.com/add/kompan_21?share_id=ZfJg2xpOLWU&locale=pl-PL" target="_blank" rel="noopener"><i class="fab fa-snapchat" style="color:#FFFC00"></i>Snapchat</a>
-        <a class="btn" href="https://www.facebook.com/share/16BK7T6gJB/" target="_blank" rel="noopener"><i class="fab fa-facebook" style="color:#1877F2"></i>Facebook</a>
-        <a class="btn" href="https://youtube.com/@dawidebertowski?si=JIIJOeOliAdSwazo" target="_blank" rel="noopener"><i class="fab fa-youtube" style="color:#FF0000"></i>YouTube</a>
-        <a class="btn" href="https://www.tiktok.com/@ebek_official?_t=ZN-90jPcfSWsVS&_r=1" target="_blank" rel="noopener"><i class="fab fa-tiktok" style="color:#00f2ea"></i>TikTok</a>
+        <a class="btn" href="https://www.instagram.com/ebek_18?igsh=MTN5eHhqYWl0dmJrOA==" target="_blank" rel="noopener">
+          <i class="fab fa-instagram" style="color:#E1306C"></i>Instagram
+        </a>
+        <a class="btn" href="https://www.snapchat.com/add/kompan_21?share_id=ZfJg2xpOLWU&locale=pl-PL" target="_blank" rel="noopener">
+          <i class="fab fa-snapchat" style="color:#FFFC00"></i>Snapchat
+        </a>
+        <a class="btn" href="https://www.facebook.com/share/16BK7T6gJB/" target="_blank" rel="noopener">
+          <i class="fab fa-facebook" style="color:#1877F2"></i>Facebook
+        </a>
+        <a class="btn" href="https://youtube.com/@dawidebertowski?si=JIIJOeOliAdSwazo" target="_blank" rel="noopener">
+          <i class="fab fa-youtube" style="color:#FF0000"></i>YouTube
+        </a>
+        <a class="btn" href="https://www.tiktok.com/@ebek_official?_t=ZN-90jPcfSWsVS&_r=1" target="_blank" rel="noopener">
+          <i class="fab fa-tiktok" style="color:#00f2ea"></i>TikTok
+        </a>
       </div>
 
       <div class="cta">
@@ -153,24 +157,17 @@
   </div>
 
   <script>
-    // Twarde ograniczenie przewijania do zawartości #page (nie pozwala zjechać niżej niż stopka)
-    (function(){
+    (function () {
       const scroller = document.getElementById('page');
-      scroller.addEventListener('scroll', function(){
+      function clamp(){
         const max = scroller.scrollHeight - scroller.clientHeight;
-        if (scroller.scrollTop > max) scroller.scrollTop = max;
         if (scroller.scrollTop < 0) scroller.scrollTop = 0;
-      }, {passive:true});
-    })();
-
-    // Drobna ochrona: wyłącz PPM i najpopularniejsze skróty podejrzenia źródła
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => {
-      if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U')) ||
-          (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i'))) {
-        e.preventDefault();
+        if (scroller.scrollTop > max) scroller.scrollTop = max;
       }
-    });
+      scroller.addEventListener('scroll', () => requestAnimationFrame(clamp), {passive:true});
+      addEventListener('resize', clamp);
+      addEventListener('orientationchange', () => setTimeout(clamp, 150));
+    })();
   </script>
 </body>
 </html>
