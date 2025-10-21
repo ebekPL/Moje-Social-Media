@@ -113,6 +113,135 @@
       window.addEventListener('load', ()=>{ clamp(); });
     })();
   </script>
+  <script>
+    // Globalne ograniczenie przewijania: nie pozwól wyjechać ponad header ani poniżej stopki
+    (function(){
+      const root = document.documentElement;
+      function maxScroll(){ return Math.max(0, root.scrollHeight - window.innerHeight); }
+      function clamp(){
+        const m = maxScroll();
+        if (window.scrollY > m) window.scrollTo(0, m);
+        if (window.scrollY < 0) window.scrollTo(0, 0);
+      }
+      // Scroll/resize — pilnuj granic
+      addEventListener('scroll', clamp, { passive: true });
+      addEventListener('resize', clamp, { passive: true });// Kółko myszy — blokuj, gdy jesteśmy na granicach
+  addEventListener('wheel', function(e){
+    const m = maxScroll();
+    if ((window.scrollY <= 0 && e.deltaY < 0) || (window.scrollY >= m && e.deltaY > 0)) {
+      e.preventDefault();
+      clamp();
+    }
+  }, { passive: false });
+
+  // Klawiatura — PageDown/End/Spacja i PageUp/Home
+  addEventListener('keydown', function(e){
+    const m = maxScroll();
+    const downKeys = ['PageDown','End','ArrowDown',' ','Spacebar'];
+    const upKeys   = ['PageUp','Home','ArrowUp'];
+    if (downKeys.includes(e.key) && window.scrollY >= m) { e.preventDefault(); clamp(); }
+    if (upKeys.includes(e.key)   && window.scrollY <= 0) { e.preventDefault(); clamp(); }
+  }, false);
+
+  // Dotyk (mobile): blokuj gdy na górze/dole
+  let startY = 0;
+  addEventListener('touchstart', (e)=>{ if(e.touches[0]) startY = e.touches[0].clientY; }, { passive: true });
+  addEventListener('touchmove', function(e){
+    const m = maxScroll();
+    const y = e.touches[0].clientY;
+    const pullingDown = y > startY + 2;   // gest w dół
+    const pushingUp   = y < startY - 2;   // gest w górę
+    if ((window.scrollY <= 0 && pullingDown) || (window.scrollY >= m && pushingUp)) {
+      e.preventDefault();
+      clamp();
+    }
+  }, { passive: false });
+
+  // Startowo wyrównaj (np. po odświeżeniu lub powrocie wstecz)
+  clamp();
+})();
+
+  </script>
+</body>
+</html>    .counter{text-align:center;margin:42px 0 8px;font-family:'Orbitron',sans-serif;color:var(--c-neon);text-shadow:0 0 10px #00ffff,0 0 22px rgba(0,119,255,.8)}
+
+    footer{text-align:center;color:#9db0d1;margin:40px 0 28px;font-size:.9rem}
+      /* Blokada overscrolowania do góry (pull‑to‑refresh) i wstępne zablokowanie przewijania */
+    html, body { overscroll-behavior-y: none; }
+    body.lock-scroll { overflow: hidden; height: 100vh; }
+      /* Pełna kontrola overscrollu (góra i dół) */
+    html, body { overscroll-behavior-y: none; }
+  </style></head>
+<body class="lock-scroll">
+  <header class="hero">
+    <div class="msg">Witaj na mojej stronie ✨</div>
+    <div class="msg msg2">Pozdrowienia od Ebka 💫</div>
+  </header>  <main class="panel">
+    <div class="social-container">
+      <a class="social-button" href="https://www.instagram.com/ebek_18?igsh=MTN5eHhqYWl0dmJrOA==" target="_blank" rel="noopener"><i class="fab fa-instagram" style="color:#E1306C"></i>Instagram</a>
+      <a class="social-button" href="https://www.snapchat.com/add/kompan_21?share_id=ZfJg2xpOLWU&locale=pl-PL" target="_blank" rel="noopener"><i class="fab fa-snapchat" style="color:#FFFC00"></i>Snapchat</a>
+      <a class="social-button" href="https://www.facebook.com/share/16BK7T6gJB/" target="_blank" rel="noopener"><i class="fab fa-facebook" style="color:#1877F2"></i>Facebook</a>
+      <a class="social-button" href="https://youtube.com/@dawidebertowski?si=JIIJOeOliAdSwazo" target="_blank" rel="noopener"><i class="fab fa-youtube" style="color:#FF0000"></i>YouTube</a>
+      <a class="social-button" href="https://www.tiktok.com/@ebek_official?_t=ZN-90jPcfSWsVS&_r=1" target="_blank" rel="noopener"><i class="fab fa-tiktok" style="color:#00f2ea"></i>TikTok</a>
+    </div><div class="contact-box">
+  <div class="contact-inner">💡 Chcesz też taką stronę?<br>Napisz do mnie na <a href="https://www.instagram.com/ebek_18" target="_blank" rel="noopener">Instagramie</a> — pomogę Ci stworzyć swoją!</div>
+</div>
+
+<div class="counter">
+  <p>Łączna liczba odwiedzin:</p>
+  <div class="counter-widget">
+    <script src="https://elfsightcdn.com/platform.js" async></script>
+    <div class="elfsight-app-fd4ec0e4-d0e4-4306-a2f3-5071cae6e0af" data-elfsight-app-lazy></div>
+  </div>
+</div>
+
+  </main>  <footer>© 2025 Ebek Official. Wszelkie prawa zastrzeżone.</footer>
+  <script>
+    // 1) Po załadowaniu strony odblokuj przewijanie (po krótkim intro), ale zostaw na samej górze
+    (function(){
+      function unlock(){ document.body.classList.remove('lock-scroll'); window.scrollTo(0,0); }
+      // po pełnym wczytaniu i krótkim opóźnieniu
+      window.addEventListener('load', function(){ setTimeout(unlock, 800); });
+    })();// 2) Zablokuj „ściąganie” w górę, gdy jesteśmy na samej górze (mobile iOS/Android)
+(function(){
+  let startY = 0;
+  document.addEventListener('touchstart', function(e){ if(e.touches && e.touches[0]) startY = e.touches[0].clientY; }, {passive:true});
+  document.addEventListener('touchmove', function(e){
+    if (window.scrollY <= 0) {
+      const curY = e.touches[0].clientY;
+      const pullingDown = curY > startY + 2; // gest w dół
+      if (pullingDown) e.preventDefault();
+    }
+  }, {passive:false});
+})();
+
+  </script>
+  <script>
+    // Twarde ograniczenie przewijania: nie pozwól przewinąć poniżej stopki
+    (function(){
+      const root = document.documentElement;
+      let lastY = 0;
+      function clamp(){
+        const max = Math.max(0, root.scrollHeight - window.innerHeight);
+        if (window.scrollY > max) window.scrollTo(0, max);
+        if (window.scrollY < 0) window.scrollTo(0, 0);
+      }
+      document.addEventListener('scroll', clamp, {passive:true});
+      // Na mobile zablokuj gesty, które wyciągają poza dół strony
+      document.addEventListener('touchstart', e=>{ if(e.touches[0]) lastY = e.touches[0].clientY; }, {passive:true});
+      document.addEventListener('touchmove', function(e){
+        const max = Math.max(0, root.scrollHeight - window.innerHeight);
+        const curY = e.touches[0].clientY;
+        const swipingUp = curY < lastY - 2; // gest w górę (przewijanie w dół strony)
+        if (window.scrollY >= max && swipingUp) {
+          e.preventDefault(); // zatrzymaj wyciąganie poniżej stopki
+        }
+        lastY = curY;
+      }, {passive:false});
+      // Na starcie wyrównaj pozycję (na wypadek pamięci scrola po odświeżeniu)
+      window.addEventListener('load', ()=>{ clamp(); });
+    })();
+  </script>
 </body>
 </html>
     footer{text-align:center;color:#9db0d1;margin:40px 0 28px;font-size:.9rem}
