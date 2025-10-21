@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ebek Official — Moje Social Media</title>
   <meta name="description" content="Neonowa wizytówka Ebka: linki do Instagram, Snapchat, YouTube, Facebook, TikTok + licznik odwiedzin i animowane powitanie." />
   <meta name="theme-color" content="#00ffff" />
 
-  <!-- CSP: tylko niezbędne źródła -->
+  <!-- Bezpieczna, ale pozwalająca na Elfsight + fonty -->
   <meta http-equiv="Content-Security-Policy"
         content="
           default-src 'self';
-          script-src 'self' 'unsafe-inline' https://elfsightcdn.com https://*.elfsight.com;
+          script-src 'self' 'unsafe-inline' https://static.elfsight.com https://*.elfsight.com;
           style-src  'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
           font-src   'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com;
           img-src    'self' data: https://*;
@@ -20,21 +20,181 @@
           upgrade-insecure-requests;
         ">
 
+  <!-- Ikonka + czcionki + ikony -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>✨</text></svg>">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer">
 
   <style>
     :root{
-      --c-bg-1:#0b1220; --c-bg-2:#0f1a33; --c-text:#e6f1ff; --c-neon:#00eaff; --cycle:10s;
-      --glow: 0 0 16px rgba(0,255,255,.65), 0 0 36px rgba(0,255,255,.35);
+      --bg1:#0b1220; --bg2:#0f1a33; --text:#e6f1ff; --neon:#00ffff; --cycle:10s;
+      --ring:0 0 18px rgba(0,255,255,.55), 0 0 42px rgba(0,255,255,.30);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    /* Nie przewijamy body – przewijany jest #page (stabilniej na telefonach) */
+    body{
+      overflow:hidden; color:var(--text);
+      font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1100px 800px at 90% -10%, rgba(0,255,255,.10), transparent 60%),
+        radial-gradient(1000px 1000px at -10% 120%, rgba(176,38,255,.10), transparent 60%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+    }
+    /* delikatny ruch tła */
+    body::before{
+      content:""; position:fixed; inset:-15%; z-index:-1; filter:blur(2px);
+      background:
+        radial-gradient(700px 500px at 85% 0%, rgba(0,255,255,.12), transparent 60%),
+        radial-gradient(600px 700px at 0% 100%, rgba(176,38,255,.12), transparent 60%);
+      animation:bgDrift 26s linear infinite;
+    }
+    @keyframes bgDrift{0%{transform:translate3d(0,0,0)}50%{transform:translate3d(2%,-1%,0)}100%{transform:translate3d(0,0,0)}}
+
+    /* PRZEWIJANY kontener */
+    #page{
+      height:100%; overflow:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+      display:flex; flex-direction:column; align-items:stretch;
     }
 
-    *{ box-sizing:border-box; margin:0; padding:0 }
-    html,body{ height:100% }
-    body{
-      color:var(--c-text);
-      font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    /* HERO — powitania */
+    header.hero{
+      position:relative; text-align:center;
+      padding-top:68px; height:138px; /* stała wysokość → zawsze widać napisy */
+    }
+    .msg{
+      position:absolute; left:0; right:0; top:72px;
+      font-family:'Orbitron',sans-serif; font-weight:600;
+      font-size:clamp(28px,6.2vw,52px); letter-spacing:.6px;
+      color:#00ffff; text-shadow:0 0 10px currentColor,0 0 26px currentColor;
+      opacity:0; transform:translateY(8px);
+      animation:fadeSync var(--cycle) ease-in-out infinite, hue 12s linear infinite;
+    }
+    .msg2{animation-delay:calc(var(--cycle)/2), 0s}
+    header.hero::after{
+      content:""; position:absolute; left:50%; top:100%; transform:translateX(-50%);
+      width:min(72%,420px); height:4px; margin-top:14px; border-radius:4px;
+      background:#00ffff; filter:drop-shadow(0 0 10px #00ffff) drop-shadow(0 0 28px #00ffff);
+    }
+    @keyframes fadeSync{
+      0%{opacity:0;transform:translateY(8px)}
+      12%{opacity:1;transform:translateY(0)}
+      62%{opacity:1}
+      74%{opacity:0;transform:translateY(-6px)}
+      100%{opacity:0;transform:translateY(-6px)}
+    }
+    @keyframes hue{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
+
+    /* PANEL */
+    .panel{
+      position:relative; width:clamp(300px,92%,900px);
+      margin: 0 auto 20px; padding:30px 20px; border-radius:34px;
+      background:rgba(8,12,16,.92);
+      border:2px solid rgba(0,255,255,.55);
+      box-shadow:0 0 44px rgba(0,255,255,.25), inset 0 0 80px rgba(0,255,255,.08);
+    }
+    .panel::before{
+      content:""; position:absolute; inset:-3px; border-radius:36px; pointer-events:none;
+      background:conic-gradient(from 0deg, rgba(0,255,255,.35), rgba(176,38,255,.35), rgba(0,255,255,.35));
+      filter:blur(16px); opacity:.4;
+    }
+
+    /* PRZYCISKI */
+    .socials{display:flex;flex-direction:column;align-items:center;gap:22px;margin:32px auto 38px;width:100%;max-width:760px}
+    .btn{
+      display:flex;align-items:center;justify-content:center;gap:14px;
+      width:min(94%,720px); padding:20px 30px; border-radius:34px;
+      text-decoration:none; color:#cfefff; font-weight:800; letter-spacing:.6px;
+      font-size:clamp(20px,4.8vw,28px);
+      background:radial-gradient(120% 180% at 50% -20%, rgba(0,255,255,.12), transparent 40%),
+                 linear-gradient(180deg,#0e141b,#0a0f14 60%,#0a0f14);
+      border:4px solid rgba(0,255,255,.85);
+      box-shadow:var(--ring), 0 16px 34px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.06);
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      text-shadow:0 0 10px currentColor,0 0 24px currentColor; /* ZAWSZE widoczne */
+      animation:colorShift 10s linear infinite;
+    }
+    .btn i{font-size:24px}
+    .btn:hover{transform:translateY(-2px) scale(1.02); box-shadow:0 0 64px rgba(0,255,255,.55), 0 18px 38px rgba(0,0,0,.6); border-color:#00ffff}
+    @keyframes colorShift{0%{color:#cfefff}50%{color:#9feaff}100%{color:#cfefff}}
+
+    /* CTA */
+    .cta-wrap{display:flex;justify-content:center}
+    .cta{
+      max-width:820px; width:min(92%,820px);
+      margin:8px auto 24px; padding:14px 18px; border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:inset 0 0 30px rgba(0,255,255,.15), 0 10px 26px rgba(0,0,0,.45);
+      font-family:'Orbitron',sans-serif; font-weight:600;
+      font-size:clamp(18px,5vw,30px); line-height:1.35; text-align:center;
+      color:#8ffcff; text-shadow:0 0 14px #00ffff, 0 0 26px #00d0ff;
+    }
+    .cta a{color:#00ffff;text-decoration:none;font-weight:700}
+
+    /* LICZNIK */
+    .counter{text-align:center;margin:22px 0 6px;font-family:'Orbitron',sans-serif;color:#00ffff;
+      text-shadow:0 0 10px #00ffff,0 0 22px rgba(0,119,255,.8)}
+    .widget{
+      display:inline-block; margin-top:12px; padding:10px; border-radius:14px; background:#0b0f14;
+      box-shadow:0 0 22px rgba(0,255,255,.35); min-height:140px;
+    }
+
+    /* STOPKA klejona do dołu w obrębie #page (przewijany kontener) */
+    footer{margin-top:auto;text-align:center;color:#9db0d1;padding:26px 0 22px;font-size:.95rem;user-select:none}
+
+    /* dostępność */
+    @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <!-- PRZEWIJAMY tylko ten kontener → brak wyciągania ponad/pod stronę -->
+  <div id="page">
+    <header class="hero" role="banner">
+      <div class="msg">Witaj na mojej stronie ✨</div>
+      <div class="msg msg2">Pozdrowienia od Ebka 💫</div>
+    </header>
+
+    <main class="panel" role="main">
+      <div class="socials">
+        <a class="btn" href="https://www.instagram.com/ebek_18?igsh=MTN5eHhqYWl0dmJrOA==" target="_blank" rel="noopener">
+          <i class="fab fa-instagram" style="color:#E1306C"></i>Instagram
+        </a>
+        <a class="btn" href="https://www.snapchat.com/add/kompan_21?share_id=ZfJg2xpOLWU&locale=pl-PL" target="_blank" rel="noopener">
+          <i class="fab fa-snapchat" style="color:#FFFC00"></i>Snapchat
+        </a>
+        <a class="btn" href="https://www.facebook.com/share/16BK7T6gJB/" target="_blank" rel="noopener">
+          <i class="fab fa-facebook" style="color:#1877F2"></i>Facebook
+        </a>
+        <a class="btn" href="https://youtube.com/@dawidebertowski?si=JIIJOeOliAdSwazo" target="_blank" rel="noopener">
+          <i class="fab fa-youtube" style="color:#FF0000"></i>YouTube
+        </a>
+        <a class="btn" href="https://www.tiktok.com/@ebek_official?_t=ZN-90jPcfSWsVS&_r=1" target="_blank" rel="noopener">
+          <i class="fab fa-tiktok" style="color:#00f2ea"></i>TikTok
+        </a>
+      </div>
+
+      <div class="cta-wrap">
+        <div class="cta">
+          💡 Chcesz też taką stronę? Napisz do mnie na
+          <a href="https://www.instagram.com/ebek_18" target="_blank" rel="noopener">Instagramie</a> — pomogę Ci stworzyć swoją!
+        </div>
+      </div>
+
+      <div class="counter">
+        <p>Łączna liczba odwiedzin:</p>
+        <div class="widget">
+          <!-- Elfsight Visitor Counter -->
+          <script src="https://static.elfsight.com/platform/platform.js" async></script>
+          <div class="elfsight-app-fd4ec0e4-d0e4-4306-a2f3-5071cae6e0af" data-elfsight-app-lazy></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>© 2025 Ebek Official. Wszelkie prawa zastrzeżone.</footer>
+  </div>
+</body>
+</html>      font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       overflow:hidden;
       background: radial-gradient(1200px 800px at 90% -10%, rgba(0,255,255,.10), transparent 60%),
                   radial-gradient(1000px 1000px at -10% 120%, rgba(176,38,255,.10), transparent 60%),
