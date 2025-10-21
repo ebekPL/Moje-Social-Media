@@ -1,40 +1,193 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ebek Official — Moje Social Media</title>
-  <meta name="description" content="Neonowa wizytówka Ebka: linki do Instagram, Snapchat, YouTube, Facebook, TikTok + licznik odwiedzin i animowane powitanie." />
-  <meta name="theme-color" content="#00ffff" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ebek Official — Social Media</title>
 
-  <!-- CSP: pozwalamy na Elfsight + Google Fonts + Font Awesome -->
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self';
-          script-src 'self' 'unsafe-inline' https://static.elfsight.com https://*.elfsight.com;
-          style-src  'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
-          font-src   'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com;
-          img-src    'self' data: https://*;
-          frame-src  https://*.elfsight.com;
-          connect-src 'self';
-          upgrade-insecure-requests;
-        ">
-
-  <!-- Czcionki i ikony -->
+  <!-- Fonty i ikony -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    :root{
-      --bg1:#0b1220; --bg2:#0f1a33; --text:#e6f1ff; --neon:#00ffff; --cycle:10s;
-      --glow: 0 0 22px rgba(0,255,255,.55), 0 0 44px rgba(0,255,255,.30);
+    :root {
+      --neon: #00ffff;
+      --bg1: #060b16;
+      --bg2: #0b1224;
+      --text: #e6f1ff;
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      overflow:hidden; color:var(--text);
-      font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg1), var(--bg2));
+      overflow-x: hidden;
+    }
+
+    /* Sekcja z powitaniami */
+    header {
+      position: relative;
+      height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      z-index: 10; /* nad panelem */
+    }
+
+    header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(26px, 6vw, 48px);
+      color: var(--neon);
+      text-shadow: 0 0 12px var(--neon), 0 0 30px var(--neon);
+      position: absolute;
+      opacity: 0;
+      animation: fade 8s infinite;
+    }
+
+    header h1:nth-child(2) {
+      animation-delay: 4s;
+    }
+
+    @keyframes fade {
+      0%, 100% { opacity: 0; transform: translateY(10px); }
+      10%, 40% { opacity: 1; transform: translateY(0); }
+      60%, 90% { opacity: 0; transform: translateY(-10px); }
+    }
+
+    /* Linia pod powitaniem */
+    .divider {
+      width: 70%;
+      max-width: 400px;
+      height: 3px;
+      background: var(--neon);
+      box-shadow: 0 0 15px var(--neon);
+      margin-top: 130px;
+      border-radius: 3px;
+    }
+
+    /* Panel */
+    main {
+      position: relative;
+      margin: 40px auto;
+      padding: 40px 20px;
+      width: min(90%, 700px);
+      background: rgba(8, 12, 16, 0.9);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 25px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+      text-align: center;
+      z-index: 5;
+    }
+
+    /* Przyciski */
+    .socials {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .socials a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #dff;
+      font-weight: 600;
+      font-size: 22px;
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(0, 255, 255, 0.08);
+      border: 2px solid rgba(0, 255, 255, 0.6);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .socials a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+    }
+
+    /* Sekcja CTA */
+    .cta {
+      margin-top: 25px;
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon);
+      font-size: 20px;
+      text-shadow: 0 0 12px var(--neon);
+    }
+
+    .cta a {
+      color: var(--neon);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* Licznik */
+    .counter {
+      margin-top: 30px;
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon);
+      text-shadow: 0 0 10px var(--neon);
+    }
+
+    .counter .widget {
+      margin-top: 10px;
+      background: transparent;
+      min-height: 140px; /* miejsce na załadowanie widgetu */
+    }
+
+    footer {
+      text-align: center;
+      color: #a7b5d9;
+      font-size: 14px;
+      margin: 40px 0 20px;
+    }
+
+    @media (max-width: 600px) {
+      header { height: 150px; }
+      main { padding: 30px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Witaj na mojej stronie ✨</h1>
+    <h1>Pozdrowienia od Ebka 💫</h1>
+    <div class="divider"></div>
+  </header>
+
+  <main>
+    <div class="socials">
+      <a href="https://www.instagram.com/ebek_18?igsh=MTN5eHhqYWl0dmJrOA==" target="_blank"><i class="fab fa-instagram" style="color:#E1306C"></i>Instagram</a>
+      <a href="https://www.snapchat.com/add/kompan_21?share_id=ZfJg2xpOLWU&locale=pl-PL" target="_blank"><i class="fab fa-snapchat" style="color:#FFFC00"></i>Snapchat</a>
+      <a href="https://www.facebook.com/share/16BK7T6gJB/" target="_blank"><i class="fab fa-facebook" style="color:#1877F2"></i>Facebook</a>
+      <a href="https://youtube.com/@dawidebertowski?si=JIIJOeOliAdSwazo" target="_blank"><i class="fab fa-youtube" style="color:#FF0000"></i>YouTube</a>
+      <a href="https://www.tiktok.com/@ebek_official?_t=ZN-90jPcfSWsVS&_r=1" target="_blank"><i class="fab fa-tiktok" style="color:#00f2ea"></i>TikTok</a>
+    </div>
+
+    <div class="cta">
+      💡 Chcesz też taką stronę?<br>
+      Napisz do mnie na <a href="https://www.instagram.com/ebek_18" target="_blank">Instagramie</a> — pomogę Ci stworzyć swoją!
+    </div>
+
+    <div class="counter">
+      <p>Łączna liczba odwiedzin:</p>
+      <div class="widget">
+        <script src="https://static.elfsight.com/platform/platform.js" async></script>
+        <div class="elfsight-app-fd4ec0e4-d0e4-4306-a2f3-5071cae6e0af" data-elfsight-app-lazy></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>© 2025 Ebek Official. Wszelkie prawa zastrzeżone.</footer>
+</body>
+</html>      background:
         radial-gradient(1100px 800px at 90% -10%, rgba(0,255,255,.10), transparent 60%),
         radial-gradient(1000px 1000px at -10% 120%, rgba(176,38,255,.10), transparent 60%),
         linear-gradient(180deg,var(--bg1),var(--bg2));
